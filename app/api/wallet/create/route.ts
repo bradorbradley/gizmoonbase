@@ -3,18 +3,18 @@ import { verifySMSCode, createEmbeddedWallet } from '@/lib/coinbase'
 
 export async function POST(request: NextRequest) {
   try {
-    const { phone, code } = await request.json()
+    const { phone, code, sessionId } = await request.json()
     
-    console.log('Wallet create request received:', { phone, code, codeType: typeof code })
+    console.log('Wallet create request received:', { phone, code, sessionId, codeType: typeof code })
     
     if (!phone || !code) {
       console.log('Missing required fields')
       return NextResponse.json({ error: 'Phone and code required' }, { status: 400 })
     }
 
-    // Verify SMS code
+    // Verify SMS code with sessionId
     console.log('Starting SMS verification...')
-    const verification = await verifySMSCode(phone, code)
+    const verification = await verifySMSCode(phone, code, sessionId)
     console.log('SMS verification result:', verification)
     
     if (!verification.success) {
@@ -22,13 +22,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 })
     }
 
-    // Create Embedded Wallet
-    const wallet = await createEmbeddedWallet(phone)
+    // Create Embedded Wallet using data from verification
+    const wallet = await createEmbeddedWallet(phone, verification.walletData)
     
     if (wallet.success) {
       return NextResponse.json({ 
         success: true, 
-        address: wallet.address 
+        address: wallet.address,
+        walletData: wallet.walletData 
       })
     } else {
       return NextResponse.json({ error: 'Failed to create wallet' }, { status: 500 })

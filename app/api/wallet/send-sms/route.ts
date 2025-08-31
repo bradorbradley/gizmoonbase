@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ 
         success: true,
         message: result.message,
-        isDemoMode: result.isDemoMode || false
+        isDemoMode: result.isDemoMode || false,
+        sessionId: result.sessionId // Pass sessionId for verification
       })
     } else {
       console.error('SMS verification failed:', result)

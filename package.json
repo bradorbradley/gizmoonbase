@@ -13,6 +13,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@coinbase/cdp-core": "^0.0.24",
+    "@coinbase/cdp-hooks": "^0.0.24",
+    "@coinbase/cdp-react": "^0.0.24",
     "@coinbase/coinbase-sdk": "^0.25.0",
     "@coinbase/onchainkit": "^0.38.19",
     "@coinbase/wallet-sdk": "^4.3.7",

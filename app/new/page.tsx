@@ -18,6 +18,7 @@ export default function CreateGizmo() {
   const [verificationCode, setVerificationCode] = useState('')
   const [codeSent, setCodeSent] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
+  const [sessionId, setSessionId] = useState('')
   
   // Gizmo step state
   const [gizmoUrl, setGizmoUrl] = useState('')
@@ -48,9 +49,16 @@ export default function CreateGizmo() {
         console.log('SMS Response data:', data)
         setCodeSent(true)
         
-        // Show demo message if in demo mode
+        // Store sessionId for verification
+        if (data.sessionId) {
+          setSessionId(data.sessionId)
+        }
+        
+        // Show appropriate message
         if (data.isDemoMode) {
           alert('Demo Mode: Use verification code 123456')
+        } else {
+          alert('SMS sent! Check your phone for the verification code.')
         }
       } else {
         console.error('SMS request failed with status:', response.status)
@@ -80,7 +88,7 @@ export default function CreateGizmo() {
       const response = await fetch('/api/wallet/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code: verificationCode })
+        body: JSON.stringify({ phone, code: verificationCode, sessionId })
       })
       
       console.log('Wallet create response status:', response.status)
