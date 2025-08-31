@@ -3,6 +3,16 @@ import { signInWithSms, verifySmsOTP } from '@coinbase/cdp-core'
 // Embedded Wallets SMS Authentication
 console.log('Coinbase Embedded Wallets - SMS Authentication enabled')
 
+// Check if required environment variables are present
+const projectId = process.env.NEXT_PUBLIC_COINBASE_PROJECT_ID
+const isConfigured = !!projectId && projectId !== 'your_project_id'
+
+console.log('Coinbase configuration:', {
+  projectIdPresent: !!projectId,
+  isConfigured,
+  projectIdValue: projectId?.substring(0, 20) + '...'
+})
+
 // Create embedded wallet after SMS verification
 export async function createEmbeddedWallet(phone: string, walletData?: any) {
   console.log('Creating embedded wallet for:', phone)
@@ -53,6 +63,11 @@ export async function sendSMSVerification(phone: string) {
   console.log(`Sending SMS verification via Coinbase Embedded Wallets to ${phone}`)
   
   try {
+    // Ensure SDK is configured
+    if (!isConfigured) {
+      throw new Error('Coinbase project not configured')
+    }
+    
     // Use Coinbase's built-in SMS authentication
     const result = await signInWithSms({ phoneNumber: phone })
     
