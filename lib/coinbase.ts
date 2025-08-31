@@ -126,15 +126,19 @@ export async function sendSMSVerification(phone: string) {
 }
 
 export async function verifySMSCode(phone: string, code: string) {
+  console.log('Verifying SMS code:', { phone, code, codeType: typeof code })
+  
   // In production, verify against stored code from database/Redis
   // For demo, accept the fixed code
-  if (code === '123456') {
+  if (code === '123456' || code === 123456) {
+    console.log('SMS verification successful')
     return { 
       success: true, 
       message: 'Phone verified successfully'
     }
   }
   
+  console.log('SMS verification failed - code mismatch')
   return { 
     success: false, 
     message: 'Invalid verification code'
