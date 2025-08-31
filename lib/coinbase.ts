@@ -55,6 +55,19 @@ const initializeCoinbase = () => {
 
 // Create embedded wallet for phone number
 export async function createEmbeddedWallet(phone: string) {
+  // BYPASS MODE: For testing while debugging Coinbase API issues
+  const BYPASS_MODE = process.env.COINBASE_BYPASS_MODE === 'true'
+  
+  if (BYPASS_MODE) {
+    console.log('BYPASS MODE: Using demo wallet')
+    // Generate a realistic-looking address for demo
+    const demoAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045' // Example Base address
+    return {
+      address: demoAddress,
+      success: true
+    }
+  }
+  
   const coinbase = initializeCoinbase()
   
   if (!coinbase) {
