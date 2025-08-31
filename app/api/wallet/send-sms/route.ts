@@ -12,7 +12,11 @@ export async function POST(request: NextRequest) {
     const result = await sendSMSVerification(phone)
     
     if (result.success) {
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ 
+        success: true,
+        message: result.message,
+        isDemoMode: result.isDemoMode || false
+      })
     } else {
       return NextResponse.json({ error: 'Failed to send SMS' }, { status: 500 })
     }

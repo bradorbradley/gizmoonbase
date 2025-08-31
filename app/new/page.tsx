@@ -35,11 +35,18 @@ export default function CreateGizmo() {
       })
       
       if (response.ok) {
+        const data = await response.json()
         setCodeSent(true)
+        
+        // Show demo message if in demo mode
+        if (data.isDemoMode) {
+          alert('Demo Mode: Use verification code 123456')
+        }
       } else {
         alert('Failed to send code')
       }
     } catch (error) {
+      console.error('SMS error:', error)
       alert('Failed to send code')
     } finally {
       setLoading(false)

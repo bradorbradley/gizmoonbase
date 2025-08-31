@@ -75,19 +75,18 @@ export async function createEmbeddedWallet(phone: string) {
 
 // SMS verification for phone numbers
 export async function sendSMSVerification(phone: string) {
-  // In production, use a service like Twilio, AWS SNS, or Coinbase's built-in SMS
-  // For now, simulate SMS sending
-  console.log(`Sending SMS verification to ${phone}`)
+  // DEMO MODE: In production, integrate with Twilio, AWS SNS, or similar
+  console.log(`[DEMO] Would send SMS verification to ${phone}`)
   
-  // Generate 6-digit code
-  const code = Math.floor(100000 + Math.random() * 900000).toString()
+  // Simulate network delay to make it feel real
+  await new Promise(resolve => setTimeout(resolve, 1000))
   
-  // In production, store this code in Redis/database with expiration
-  // For demo, we'll use a fixed code
+  // For demo purposes, always return success
+  // In production, this would integrate with your SMS provider
   return { 
-    success: true, 
-    code: '123456', // In production, don't return the code!
-    message: 'SMS sent successfully'
+    success: true,
+    message: `Demo: SMS would be sent to ${phone}. Use code: 123456`,
+    isDemoMode: true
   }
 }
 
