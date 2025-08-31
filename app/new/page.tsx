@@ -24,18 +24,28 @@ export default function CreateGizmo() {
   const [handle, setHandle] = useState('')
 
   const sendSMSCode = async () => {
-    if (!phone) return
+    console.log('sendSMSCode called with phone:', phone)
+    if (!phone) {
+      console.log('No phone number provided')
+      return
+    }
+    
+    console.log('Setting loading to true')
     setLoading(true)
     
     try {
+      console.log('Sending SMS request to:', '/api/wallet/send-sms')
       const response = await fetch('/api/wallet/send-sms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone })
       })
       
+      console.log('SMS Response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('SMS Response data:', data)
         setCodeSent(true)
         
         // Show demo message if in demo mode
@@ -43,37 +53,53 @@ export default function CreateGizmo() {
           alert('Demo Mode: Use verification code 123456')
         }
       } else {
+        console.error('SMS request failed with status:', response.status)
         alert('Failed to send code')
       }
     } catch (error) {
       console.error('SMS error:', error)
       alert('Failed to send code')
     } finally {
+      console.log('Setting loading to false')
       setLoading(false)
     }
   }
 
   const verifyAndCreateWallet = async () => {
-    if (!phone || !verificationCode) return
+    console.log('verifyAndCreateWallet called with:', { phone, verificationCode })
+    if (!phone || !verificationCode) {
+      console.log('Missing phone or verification code')
+      return
+    }
+    
+    console.log('Starting wallet creation...')
     setLoading(true)
     
     try {
+      console.log('Sending wallet create request to:', '/api/wallet/create')
       const response = await fetch('/api/wallet/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone, code: verificationCode })
       })
       
+      console.log('Wallet create response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('Wallet create response data:', data)
         setWalletAddress(data.address)
         setStep('gizmo')
       } else {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Wallet create failed:', response.status, errorData)
         alert('Invalid code')
       }
     } catch (error) {
+      console.error('Wallet create error:', error)
       alert('Failed to create wallet')
     } finally {
+      console.log('Wallet creation finished')
       setLoading(false)
     }
   }

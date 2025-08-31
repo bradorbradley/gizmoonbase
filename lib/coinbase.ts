@@ -27,25 +27,27 @@ const initializeCoinbase = () => {
     }
     
     // Normalize line endings for PEM format
-    privateKey = privateKey.replace(/\\n/g, '\n')
+    if (privateKey) {
+      privateKey = privateKey.replace(/\\n/g, '\n')
+    }
     
     console.log('Attempting Coinbase configuration with:', {
       apiKeyName: apiKeyName.trim(),
-      privateKeyStart: privateKey.substring(0, 30) + '...',
+      privateKeyStart: privateKey?.substring(0, 30) + '...',
     })
     
     // For server-side embedded wallets, use server signer
     return Coinbase.configure({
       apiKeyName: apiKeyName.trim(),
-      privateKey: privateKey.trim(),
+      privateKey: privateKey?.trim() || '',
       useServerSigner: true, // Use server signer for API calls
     })
   } catch (error) {
     console.error('Failed to initialize Coinbase SDK:', error)
     console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      stack: error.stack?.split('\n')[0]
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: (error as any)?.code,
+      stack: error instanceof Error ? error.stack?.split('\n')[0] : undefined
     })
     return null
   }
@@ -94,14 +96,15 @@ export async function createEmbeddedWallet(phone: string) {
   } catch (error) {
     console.error('Error creating embedded wallet:', error)
     console.error('Error details:', {
-      message: error.message,
-      stack: error.stack,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
       apiKeyPresent: !!process.env.COINBASE_API_KEY,
       privateKeyPresent: !!process.env.COINBASE_PRIVATE_KEY
     })
     
     // Return error instead of mock for debugging
-    throw new Error(`Wallet creation failed: ${error.message}`)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Wallet creation failed: ${errorMessage}`)
   }
 }
 
