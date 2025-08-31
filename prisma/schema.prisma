@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Creator {
+  id              String    @id @default(cuid())
+  handle          String    @unique
+  phone           String?
+  email           String?
+  payout_address  String
+  wallet_provider String    @default("coinbase")
+  created_at      DateTime  @default(now())
+  
+  gizmos          Gizmo[]
+}
+
+model Gizmo {
+  id         String    @id @default(cuid())
+  slug       String    @unique
+  url        String
+  title      String?
+  created_at DateTime  @default(now())
+  
+  creator_id String
+  creator    Creator   @relation(fields: [creator_id], references: [id])
+  events     Event[]
+}
+
+model User {
+  fid        Int       @id
+  basename   String?
+  pfp_url    String?
+  updated_at DateTime  @default(now()) @updatedAt
+  
+  events     Event[]
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  type        String    // 'play' | 'tip' | 'outbound'
+  amount_usdc Decimal?
+  tx_hash     String?
+  ts          DateTime  @default(now())
+  
+  gizmo_id    String
+  gizmo       Gizmo     @relation(fields: [gizmo_id], references: [id])
+  
+  fid         Int?
+  user        User?     @relation(fields: [fid], references: [fid])
+}
