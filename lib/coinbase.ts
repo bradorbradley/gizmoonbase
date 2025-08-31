@@ -64,12 +64,15 @@ export async function createEmbeddedWallet(phone: string) {
     }
   } catch (error) {
     console.error('Error creating embedded wallet:', error)
-    // Fallback to mock on error
-    const mockAddress = '0x' + phone.replace(/\D/g, '').padEnd(40, '0').slice(0, 40)
-    return {
-      address: mockAddress,
-      success: true
-    }
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      apiKeyPresent: !!process.env.COINBASE_API_KEY,
+      privateKeyPresent: !!process.env.COINBASE_PRIVATE_KEY
+    })
+    
+    // Return error instead of mock for debugging
+    throw new Error(`Wallet creation failed: ${error.message}`)
   }
 }
 
