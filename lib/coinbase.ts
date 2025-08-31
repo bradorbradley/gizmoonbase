@@ -3,7 +3,14 @@ import { Coinbase, Wallet, WalletCreateOptions } from '@coinbase/coinbase-sdk'
 // Initialize Coinbase SDK
 const initializeCoinbase = () => {
   const apiKeyName = process.env.COINBASE_API_KEY
-  const privateKey = process.env.COINBASE_PRIVATE_KEY
+  let privateKey = process.env.COINBASE_PRIVATE_KEY
+  
+  console.log('Coinbase SDK initialization attempt:', {
+    apiKeyPresent: !!apiKeyName,
+    apiKeyLength: apiKeyName?.length,
+    privateKeyPresent: !!privateKey,
+    privateKeyFormat: privateKey?.startsWith('{') ? 'JSON' : privateKey?.startsWith('-----BEGIN') ? 'PEM' : 'UNKNOWN'
+  })
   
   if (!apiKeyName || !privateKey) {
     console.warn('Coinbase API credentials not configured')
@@ -11,13 +18,35 @@ const initializeCoinbase = () => {
   }
   
   try {
+    // Handle different private key formats
+    if (privateKey.startsWith('{')) {
+      // JSON format from downloaded file
+      const keyData = JSON.parse(privateKey)
+      privateKey = keyData.privateKey
+      console.log('Parsed private key from JSON format')
+    }
+    
+    // Normalize line endings for PEM format
+    privateKey = privateKey.replace(/\\n/g, '\n')
+    
+    console.log('Attempting Coinbase configuration with:', {
+      apiKeyName: apiKeyName.trim(),
+      privateKeyStart: privateKey.substring(0, 30) + '...',
+    })
+    
+    // For server-side embedded wallets, use server signer
     return Coinbase.configure({
-      apiKeyName,
-      privateKey,
-      useServerSigner: false, // Client-side signing for embedded wallets
+      apiKeyName: apiKeyName.trim(),
+      privateKey: privateKey.trim(),
+      useServerSigner: true, // Use server signer for API calls
     })
   } catch (error) {
     console.error('Failed to initialize Coinbase SDK:', error)
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack?.split('\n')[0]
+    })
     return null
   }
 }
