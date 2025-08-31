@@ -130,7 +130,7 @@ export async function verifySMSCode(phone: string, code: string) {
   
   // In production, verify against stored code from database/Redis
   // For demo, accept the fixed code
-  if (code === '123456' || code === 123456) {
+  if (code === '123456') {
     console.log('SMS verification successful')
     return { 
       success: true, 
