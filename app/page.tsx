@@ -1,81 +1,56 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Spotlight } from '@/components/ui/spotlight'
+import { ShimmerButton } from '@/components/ui/shimmer-button'
 import Link from 'next/link'
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
+      <Spotlight className="opacity-30" />
+      
       {/* Hero */}
-      <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
-        <div className="max-w-3xl space-y-6">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-            Share your Gizmo on Base. Get tipped in USDC.
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Spin up a Mini App page for your Gizmo and start earning—no contracts, no escrow.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Link href="/new">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Create your Gizmo
-              </Button>
-            </Link>
-            <Link href="/g/demo">
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
-                See a demo
-              </Button>
-            </Link>
-          </div>
+      <section className="mx-auto max-w-5xl px-4 py-20 text-center space-y-6">
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight">
+          Share your Gizmo. Get tipped in USDC.
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Spin up a Mini App page and start earning—no contracts, no escrow.
+        </p>
+        <div className="flex gap-3 justify-center pt-4">
+          <ShimmerButton asChild>
+            <Link href="/new">Create your Gizmo</Link>
+          </ShimmerButton>
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/g/demo">See a demo</Link>
+          </Button>
         </div>
-      </div>
+      </section>
 
       {/* How it works */}
-      <div className="px-4 py-16 bg-muted/50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center">1. Create wallet (SMS)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  secure payout address
-                </CardDescription>
-              </CardContent>
+      <section className="mx-auto max-w-5xl px-4 py-12">
+        <div className="grid sm:grid-cols-3 gap-6">
+          {[
+            { title: 'Create wallet (SMS)', desc: 'Secure payout address' },
+            { title: 'Paste your Gizmo link', desc: 'We make it Mini App-ready' },
+            { title: 'Share → get tipped', desc: 'Analytics dashboard included' }
+          ].map((step, i) => (
+            <Card key={i} className="p-6 text-center hover:shadow-lg transition-shadow">
+              <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
+              <p className="text-muted-foreground text-sm">{step.desc}</p>
             </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center">2. Paste your Gizmo link</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  we make it Mini App-ready
-                </CardDescription>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center">3. Share → get tipped → see your revenue & users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  analytics dashboard included
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
+          ))}
         </div>
-      </div>
+      </section>
 
       {/* Trust line */}
-      <div className="px-4 py-8 text-center">
-        <p className="text-muted-foreground font-medium">
+      <section className="mx-auto max-w-5xl px-4 py-8 text-center">
+        <Separator className="mb-6" />
+        <p className="text-muted-foreground text-sm">
           Tips go directly to your wallet. We never hold funds.
         </p>
-      </div>
+      </section>
     </div>
   )
 }

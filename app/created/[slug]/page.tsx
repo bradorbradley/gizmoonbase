@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Copy, ExternalLink, BarChart3 } from 'lucide-react'
+import { NumberTicker } from '@/components/ui/number-ticker'
 
 interface GizmoData {
   id: string
@@ -104,12 +105,15 @@ export default function GizmoCreated() {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Success Header */}
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-green-200 bg-green-50/50">
           <CardHeader className="text-center">
-            <CardTitle className="text-green-800">🎉 Gizmo Created!</CardTitle>
-            <CardDescription className="text-green-600">
+            <CardTitle className="text-green-800 text-2xl">🎉 Gizmo Created!</CardTitle>
+            <CardDescription className="text-green-700 text-base">
               Your gizmo is now live on Base and ready to earn USDC tips
             </CardDescription>
+            <div className="mt-4 text-3xl font-bold text-green-800">
+              <NumberTicker value={0} prefix="$" suffix=" Tips" className="text-green-600" />
+            </div>
           </CardHeader>
         </Card>
 
@@ -172,21 +176,27 @@ export default function GizmoCreated() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4">
-          <Card className="text-center">
+          <Card className="text-center hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-green-600">$0.00</div>
+              <div className="text-2xl font-bold text-green-600">
+                <NumberTicker value={0} prefix="$" suffix=".00" />
+              </div>
               <div className="text-sm text-muted-foreground">Total Tips</div>
             </CardContent>
           </Card>
-          <Card className="text-center">
+          <Card className="text-center hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                <NumberTicker value={0} />
+              </div>
               <div className="text-sm text-muted-foreground">Views</div>
             </CardContent>
           </Card>
-          <Card className="text-center">
+          <Card className="text-center hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                <NumberTicker value={0} />
+              </div>
               <div className="text-sm text-muted-foreground">Tips</div>
             </CardContent>
           </Card>

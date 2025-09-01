@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 type Step = 'wallet' | 'gizmo' | 'creating'
 
@@ -161,11 +163,18 @@ export default function CreateGizmo() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-lg">
         {step === 'wallet' && (
           <>
             <CardHeader>
-              <CardTitle>Step 1: Wallet</CardTitle>
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="default">1</Badge>
+                <span className="font-medium">Wallet</span>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge variant="secondary">2</Badge>
+                <span className="text-muted-foreground">Gizmo</span>
+              </div>
+              <CardTitle>Create your wallet</CardTitle>
               <CardDescription>
                 We'll create a secure wallet for your USDC tips
               </CardDescription>
@@ -173,44 +182,46 @@ export default function CreateGizmo() {
             <CardContent className="space-y-4">
               {!walletAddress ? (
                 <>
-                  <div>
+                  <div className="space-y-3">
                     <Input
                       type="tel"
-                      placeholder="+1 (555) 123-4567"
+                      placeholder="+1 555…"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       disabled={codeSent || loading}
+                      className="text-center"
                     />
-                  </div>
-                  
-                  {!codeSent ? (
-                    <Button 
-                      onClick={sendSMSCode}
-                      disabled={!phone || loading}
-                      className="w-full"
-                    >
-                      {loading ? 'Sending...' : 'Send code'}
-                    </Button>
-                  ) : (
-                    <>
-                      <div>
+                    
+                    {!codeSent ? (
+                      <Button 
+                        onClick={sendSMSCode}
+                        disabled={!phone || loading}
+                        className="w-full"
+                        size="lg"
+                      >
+                        {loading ? 'Sending...' : 'Send code'}
+                      </Button>
+                    ) : (
+                      <div className="flex gap-2">
                         <Input
-                          placeholder="Enter 6-digit code"
+                          placeholder="123456"
                           value={verificationCode}
                           onChange={(e) => setVerificationCode(e.target.value)}
                           disabled={loading}
                           maxLength={6}
+                          className="max-w-[140px] text-center"
                         />
+                        <Button 
+                          onClick={verifyAndCreateWallet}
+                          disabled={!verificationCode || loading}
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          {loading ? 'Verifying...' : 'Verify'}
+                        </Button>
                       </div>
-                      <Button 
-                        onClick={verifyAndCreateWallet}
-                        disabled={!verificationCode || loading}
-                        className="w-full"
-                      >
-                        {loading ? 'Verifying...' : 'Verify'}
-                      </Button>
-                    </>
-                  )}
+                    )}
+                  </div>
                 </>
               ) : (
                 <div className="text-center space-y-4">
@@ -230,9 +241,16 @@ export default function CreateGizmo() {
         {step === 'gizmo' && (
           <>
             <CardHeader>
-              <CardTitle>Step 2: Gizmo</CardTitle>
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary">1</Badge>
+                <span className="text-muted-foreground">Wallet</span>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge variant="default">2</Badge>
+                <span className="font-medium">Gizmo</span>
+              </div>
+              <CardTitle>Add your Gizmo</CardTitle>
               <CardDescription>
-                Add your Gizmo link and creator handle
+                Paste your Gizmo link and choose a handle
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

@@ -22,9 +22,11 @@ interface TipButtonProps {
   recipientAddress: string
   gizmoSlug: string
   onSuccess?: (txHash: string) => void
+  className?: string
+  label?: string
 }
 
-export function TipButton({ amount, recipientAddress, gizmoSlug, onSuccess }: TipButtonProps) {
+export function TipButton({ amount, recipientAddress, gizmoSlug, onSuccess, className, label }: TipButtonProps) {
   const [loading, setLoading] = useState(false)
   const { isConnected } = useAccount()
 
@@ -79,10 +81,9 @@ export function TipButton({ amount, recipientAddress, gizmoSlug, onSuccess }: Ti
       <Button 
         onClick={handleSimpleTip}
         disabled={loading}
-        size="sm" 
-        className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
+        className={className || "bg-blue-600 hover:bg-blue-700 disabled:opacity-50"}
       >
-        {loading ? 'Connecting...' : `Tip $${amount}`}
+        {loading ? 'Connecting...' : (label || `Tip $${amount}`)}
       </Button>
     )
   }
@@ -98,8 +99,8 @@ export function TipButton({ amount, recipientAddress, gizmoSlug, onSuccess }: Ti
       }}
     >
       <TransactionButton
-        text={`Tip $${amount} USDC`}
-        className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-md disabled:opacity-50"
+        text={label || `Tip $${amount} USDC`}
+        className={className || "bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md disabled:opacity-50"}
       />
       <TransactionSponsor />
       <TransactionStatus>
