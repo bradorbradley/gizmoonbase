@@ -61,6 +61,8 @@ Users can discover and tip Gizmos seamlessly within the Base ecosystem.
 ├── lib/
 │   ├── coinbase.ts                 # Embedded wallet integration
 │   └── prisma.ts                   # Database client
+├── scripts/
+│   └── seed-demo.js               # Create demo gizmo for testing
 └── prisma/
     └── schema.prisma               # Database schema
 ```
@@ -136,6 +138,20 @@ npm run dev
 ```
 
 Visit http://localhost:3000 to see the app.
+
+### Quick Demo
+
+To see the clean gizmo viewer UI immediately:
+
+```bash
+# Create demo gizmo
+node scripts/seed-demo.js
+
+# Visit demo gizmo viewer at:
+# http://localhost:3000/g/demo
+```
+
+This shows the minimal mini app interface with iframe container, creator info, and tip button.
 
 ## 🎮 User Flow
 
